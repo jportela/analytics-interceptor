@@ -32,7 +32,7 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <table class=\"dimensions\">\n      <tr>\n        <th colspan=\"2\">Dimensions</th>\n      </tr>\n      <tr>\n        <th>Index</th>\n        <th>Dimension Value</th>\n      </tr>\n      ";
+  buffer += "\n    <table class=\"dimensions\">\n      <tr>\n        <th>Index</th>\n        <th>Dimension Value</th>\n      </tr>\n      ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.dimensions), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </table>\n    ";
@@ -56,7 +56,7 @@ function program6(depth0,data) {
 function program8(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <table class=\"metrics\">\n      <tr>\n        <th colspan=\"2\">Metrics</th>\n      </tr>\n      <tr>\n        <th>Index</th>\n        <th>Metric Value</th>\n      </tr>\n      ";
+  buffer += "\n    <table class=\"metrics\">\n\n      <tr>\n        <th>Index</th>\n        <th>Metric Value</th>\n      </tr>\n      ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.metrics), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </table>\n    ";

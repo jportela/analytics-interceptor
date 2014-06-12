@@ -23,6 +23,8 @@ module.exports = Backbone.Model.extend({
 
   initialize: function () {
     this.eventList = new EventList();
+    this.listenTo(this.eventList, 'add', this.updateBadge);
+    this.listenTo(this.eventList, 'reset', this.updateBadge);
   },
 
   fetchEvents: function () {
@@ -67,14 +69,19 @@ module.exports = Backbone.Model.extend({
 
   /* Destroys all events on the eventList collection */
   clearEvents: function () {
-    var item;
-    if (this.eventList) {
-      item = this.eventList.at(0);
-      while(item) {
-        item.destroy();
-        item = this.eventList.at(0);
-      }
-    }
+    this.eventList.reset();
+  },
+
+  /* Updates the badge with the events count from the selected tab */
+  updateBadge: function () {
+    var count = this.getEventCount(),
+        id = parseInt(this.get('id'), 10);
+
+    chrome.browserAction.setBadgeText({
+      'text': '' + count,
+      tabId: id
+    });
+
   },
 
   /* Callback for the request interceptor. Adds new events to the collection  */
@@ -125,11 +132,6 @@ module.exports = Backbone.Model.extend({
       'enabled': this.get('enabled'),
       'id': this.get('id')
     };
-  },
-
-  /* When destroying a tab, cascade the removal to the events */
-  destroy: function () {
-    this.clearEvents();
   }
 
 });

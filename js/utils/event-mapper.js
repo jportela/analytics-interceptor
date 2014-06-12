@@ -59,7 +59,7 @@ module.exports = function (data) {
   };
 
   for (key in data) {
-    value = window.decodeURI(data[key]);
+    value = window.decodeURIComponent(data[key]);
 
     //if it's not an event, don't record it
     if (key === 't' && value !== 'event') {

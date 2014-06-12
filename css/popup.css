@@ -3,7 +3,7 @@ body {
 }
 
 #content {
-  width: 760px;
+  width: 100%;
 }
 
 ul {
@@ -51,17 +51,17 @@ h2 {
 
 .event-timestamp {
   font-size: 0.7em;
-  color: #636363;
+  color: #242424;
 }
 
 .event-item .header-container {
   line-height: 2em;
-  background: #bce170;
+  background: #6F9B92;
   padding: 0 0.5em;
 }
 
 .event-item:nth-child(even) .header-container {
-  background: #9dd88f;
+  background: #9BB094;
 }
 
 .event-information {
@@ -87,5 +87,9 @@ h2 {
 }
 
 .event-item {
-  background: #e8f1de;
+  background: #D2DCBE;
+}
+
+th {
+  text-align: center;
 }

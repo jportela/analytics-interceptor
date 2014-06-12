@@ -70,9 +70,11 @@ module.exports = Backbone.View.extend({
 
     this.eventList = selectedTab.fetchEvents();
 
+
     this.renderEvents();
 
     this.listenTo(this.eventList, 'add', this.addEvent);
+    this.listenTo(this.eventList, 'reset', this.renderEmptyEvents);
 
   },
 
@@ -120,6 +122,10 @@ module.exports = Backbone.View.extend({
         'tabId': tabId
       });
     });
+  },
+
+  renderEmptyEvents: function () {
+    this.$(".event-list").html('');
   },
 
   /* Utility for getting the selected tab */

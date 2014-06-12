@@ -30,11 +30,7 @@ module.exports = Backbone.Collection.extend({
 
   /* Destroys all tabs on the collection */
   clearTabs: function () {
-    var item = this.at(0);
-    while(item) {
-      item.destroy();
-      item = this.at(0);
-    }
+    this.reset();
   },
 
   /* Callback for removed tab */
@@ -47,9 +43,7 @@ module.exports = Backbone.Collection.extend({
     else {
       model = this.get('' + tabId);
 
-      if (model) {
-        model.destroy();
-      }
+      this.remove(model);
     }
   },
 
@@ -58,9 +52,9 @@ module.exports = Backbone.Collection.extend({
     var model = this.get('' + tabId);
     this.selectedTab = '' + tabId;
 
-    if (model) {
+    if (model && model.get('enabled')) {
       //updates the badge with the event count
-      this.updateBadge(model.getEventCount(), tabId);
+      model.updateBadge();
     }
     else {
       //if there's no model yet, the badge will be cleared
@@ -68,16 +62,6 @@ module.exports = Backbone.Collection.extend({
     }
     //triggers a custom event for the popup view to update itself
     this.trigger('selectedTabChanged', this.selectedTab);
-  },
-
-  /* Updates the badge with the events count fr the selected tab */
-  updateBadge: function (count, tabId) {
-    if (count !== null) {
-      chrome.browserAction.setBadgeText({
-        'text': '' + count,
-        tabId: tabId
-      });
-    }
   },
 
   /* Clears the badge */
