@@ -19,7 +19,6 @@ module.exports = Backbone.View.extend({
 
   initialize: function () {
     this.render();
-    this.listenTo(this.model, 'destroy', this.remove);
   },
 
   render: function () {

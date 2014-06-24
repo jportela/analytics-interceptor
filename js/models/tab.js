@@ -23,12 +23,22 @@ module.exports = Backbone.Model.extend({
 
   initialize: function () {
     this.eventList = new EventList();
-    this.listenTo(this.eventList, 'add', this.updateBadge);
-    this.listenTo(this.eventList, 'reset', this.updateBadge);
+    this.on('change:enabled', this.enabledChange, this);
+    this.listenTo(this.eventList, 'add', this.updateBadge, this);
+    this.listenTo(this.eventList, 'reset', this.updateBadge, this);
   },
 
   fetchEvents: function () {
     return this.eventList;
+  },
+
+  enabledChange: function () {
+    if (this.get('enabled')) {
+      this.enableInterceptor();
+    }
+    else {
+      this.disableInterceptor();
+    }
   },
 
   /* Enables the Google Analytics request interceptor and starts
@@ -40,9 +50,7 @@ module.exports = Backbone.Model.extend({
           tabId: parseInt(this.get('id'), 10)
         };
 
-    if (!this.get('enabled') || !this.interceptorFunction) {
-
-      this.set('enabled', true);
+    if (!this.interceptorFunction) {
 
       this.interceptorFunction = function () {
         self._interceptor.apply(self, Array.prototype.slice.call(arguments));
@@ -55,8 +63,6 @@ module.exports = Backbone.Model.extend({
 
   /* Stops intercepting GA requests */
   disableInterceptor: function () {
-    this.set('enabled', false);
-
     if (this.interceptorFunction) {
       chrome.webRequest.onBeforeRequest.removeListener(this.interceptorFunction);
       this.interceptorFunction = null;

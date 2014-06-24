@@ -2,6 +2,29 @@ module.exports = function(Handlebars) {
 
 this["JST"] = this["JST"] || {};
 
+this["JST"]["templates/controls.hbs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, self=this;
+
+function program1(depth0,data) {
+  
+  
+  return "\n  <button id=\"intercept\" class=\"toolbox-button\" value=\"off\">Disable</button>\n";
+  }
+
+function program3(depth0,data) {
+  
+  
+  return "\n  <button id=\"intercept\" class=\"toolbox-button\" value=\"on\">Enable</button>\n";
+  }
+
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.enabled), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  <button id=\"clear\" class=\"toolbox-button\">Clear</button>\n";
+  return buffer;
+  });
+
 this["JST"]["templates/event.hbs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -102,25 +125,10 @@ function program8(depth0,data) {
 this["JST"]["templates/interceptor.hbs"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, self=this;
+  
 
-function program1(depth0,data) {
-  
-  
-  return "\n      <button id=\"intercept\" class=\"toolbox-button\" value=\"off\">Disable</button>\n    ";
-  }
 
-function program3(depth0,data) {
-  
-  
-  return "\n      <button id=\"intercept\" class=\"toolbox-button\" value=\"on\">Enable</button>\n    ";
-  }
-
-  buffer += "<header>\n  <h1>Analytics Interceptor</h1>\n  <div class=\"toolbox\">\n    ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.enabled), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    <button id=\"clear\" class=\"toolbox-button\">Clear</button>\n  </div>\n</header>\n\n<ul class=\"event-list\">\n\n</ul>\n";
-  return buffer;
+  return "<header>\n  <h1>Analytics Interceptor</h1>\n  <div class=\"toolbox\">\n\n  </div>\n</header>\n\n<ul class=\"event-list\">\n\n</ul>\n";
   });
 
 return this["JST"];

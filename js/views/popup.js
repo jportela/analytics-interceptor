@@ -14,21 +14,16 @@ var Handlebars = require('handlebars');
 var templates = require('../../templates/templates')(Handlebars);
 var EventList = require('../collections/events');
 var EventView = require('../views/event');
+var ToolboxView = require('../views/toolbox');
 
 Backbone.$ = $;
 
 module.exports = Backbone.View.extend({
 
   template: templates['templates/interceptor.hbs'],
-  eventList: null,
-
-  events: {
-    'click #intercept': 'interceptEvents',
-    'click #clear': 'clearEvents'
-  },
+  tab: null,
 
   initialize: function () {
-    var self = this;
     if (!this.id) {
       this.$el.html("Could not find a window to attach. Please reopen the window");
     }
@@ -41,41 +36,52 @@ module.exports = Backbone.View.extend({
 
       //when the tab is changed, render the interceptor for that tab
       this.listenTo(this.tabList, 'selectedTabChanged', function (tabId) {
-        self.clearTab.call(self);
-        self.fetchTab.call(self, tabId);
-      });
+        this.clearTab();
+        this.fetchTab(tabId);
+      }, this);
     }
   },
 
-  render: function (tab) {
-    this.$el.html(this.template(tab.toJSON()));
+  render: function () {
+    if (this.tab) {
+      this.$el.html(this.template(this.tab.toJSON()));
+      this.renderControls();
+      this.renderEvents();
+    }
+    return this;
+  },
+
+  renderControls: function () {
+    this.controlsView.setElement(this.$('.toolbox')).render();
   },
 
   /* Renders the list of events */
   renderEvents: function () {
-    if (this.eventList) {
-      this.eventList.each(this.addEvent, this);
-    }
+    this.tab.eventList.each(this.addEvent, this);
   },
 
   clearTab: function () {
-    this.stopListening(this.eventList);
+    if (this.tab) {
+      this.tab.off();
+    }
   },
 
   fetchTab: function (tabId) {
-    // fetches the tab or create a new model if it doesn't exist
-    var selectedTab = this.tabList.get(tabId) || this.tabList.add({ id: tabId });
+    // fetches the tab or creates a new model if it doesn't exist
+    this.tab = this.tabList.get(tabId);
 
-    this.render(selectedTab);
+    if (!this.tab) {
+      this.tab = this.tabList.add({ id: tabId });
 
-    this.eventList = selectedTab.fetchEvents();
 
+      this.listenTo(this.tab, 'change:enabled', this.renderControls);
+      this.listenTo(this.tab.eventList, 'add', this.addEvent);
+      this.listenTo(this.tab.eventList, 'reset', this.renderEmptyEvents);
+    }
 
-    this.renderEvents();
+    this.controlsView = new ToolboxView({ model: this.tab });
 
-    this.listenTo(this.eventList, 'add', this.addEvent);
-    this.listenTo(this.eventList, 'reset', this.renderEmptyEvents);
-
+    this.render();
   },
 
   /* Appends a new event to the event list */
@@ -84,48 +90,8 @@ module.exports = Backbone.View.extend({
     this.$(".event-list").append(view.render().el);
   },
 
-  /* Handler for click on the Enable/Disable button */
-  interceptEvents: function () {
-    var target = $("#intercept");
-
-    if (target.val() === 'on') {
-      // TODO: do this on the model and automatically update the view
-      target.val('off');
-      target.html('Disable');
-
-      // enables the interceptor
-      this.getSelectedTab(function (tabId) {
-        chrome.runtime.sendMessage({
-          'cmd': 'enableInterceptor',
-          'tabId': tabId
-        });
-      });
-    }
-    else {
-      target.val('on');
-      target.html('Enable');
-
-      // disables the interceptor
-      this.getSelectedTab(function (tabId) {
-        chrome.runtime.sendMessage({
-          'cmd': 'disableInterceptor',
-          'tabId': tabId
-        });
-      });
-    }
-  },
-
-  clearEvents: function () {
-    this.getSelectedTab(function (tabId) {
-      chrome.runtime.sendMessage({
-        'cmd': 'clearEvents',
-        'tabId': tabId
-      });
-    });
-  },
-
   renderEmptyEvents: function () {
-    this.$(".event-list").html('');
+    this.$(".event-list").empty();
   },
 
   /* Utility for getting the selected tab */

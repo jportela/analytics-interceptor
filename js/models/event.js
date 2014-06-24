@@ -28,9 +28,11 @@ module.exports = Backbone.Model.extend({
     if (options && options.normalize) {
 
       normalizedObj = EventMapper(data);
-      normalizedObj.id = options.id;  //attributes an ID if it's sent on the options
 
-      Backbone.Model.call(this, normalizedObj);
+      if (normalizedObj) {
+        normalizedObj.id = options.id;  //attributes an ID if it's sent on the options
+        Backbone.Model.call(this, normalizedObj);
+      }
     }
     else {
       Backbone.Model.apply(this, Array.prototype.slice.call(arguments));

@@ -21,7 +21,7 @@ window.Tabs = new TabList();
 window.Tabs.registerListeners();
 
 // Handler for the Popup view messages
-chrome.runtime.onMessage.addListener(
+/*chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     var tab = window.Tabs.get(request.tabId);
     if (request.cmd === 'enableInterceptor') {
@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(
         tab.clearEvents();
       }
     }
-});
+});*/
 
 // opens a dock like window with the popup view
 chrome.browserAction.onClicked.addListener(function (tab) {
