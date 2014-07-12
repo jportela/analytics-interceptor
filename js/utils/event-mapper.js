@@ -58,8 +58,9 @@ module.exports = function (data) {
     timestamp: getTimestamp()
   };
 
-  for (key in data) {
-    value = window.decodeURIComponent(data[key]);
+  data.forEach(function (item) {
+    var key = item.name,
+        value = window.decodeURIComponent(item.value);
 
     //if it's not an event, don't record it
     if (key === 't' && value !== 'event') {
@@ -74,7 +75,6 @@ module.exports = function (data) {
     else {
       applyRegexMatchers(obj, key, value);
     }
-  }
-
+  });
   return obj;
 };

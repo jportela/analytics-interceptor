@@ -28,8 +28,7 @@ module.exports = function(grunt) {
 
     },
     browserify: {
-      'dist/background.js': ['js/background.js'],
-      'dist/popup.js': ['js/popup.js'],
+      'dist/panel.js': ['js/panel.js'],
       options: {
         bundleOptions: {
           debug: true

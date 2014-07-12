@@ -17,7 +17,6 @@ module.exports = Backbone.View.extend({
   className: 'toolbox',
   template: templates['templates/controls.hbs'],
   events: {
-    'click #intercept': 'interceptEvents',
     'click #clear': 'clearEvents'
   },
 
@@ -31,30 +30,7 @@ module.exports = Backbone.View.extend({
     return this;
   },
 
-  /* Handler for click on the Enable/Disable button */
-  interceptEvents: function () {
-    var target = this.$("#intercept");
-
-    // enables the interceptor
-    if (target.val() === 'on') {
-      this.enableInterceptor();
-    }
-    else {
-      this.disableInterceptor();
-    }
-
-  },
-
   clearEvents: function () {
-    this.model.eventList.reset();
-  },
-
-  enableInterceptor: function () {
-    this.model.set('enabled', true);
-  },
-
-  disableInterceptor: function () {
-    this.model.set('enabled', false);
-  },
-
+    this.model.reset();
+  }
 });
